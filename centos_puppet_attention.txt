@@ -1,4 +1,4 @@
-1. enable network (before that, set network to bridge)
+ï»¿1. enable network (before that, set network to bridge)
   a) cd /etc/sysconfig/network-scripts/
   b) vi ifcfg-ens33
   c) ONBOOT=yes
@@ -31,11 +31,11 @@
     ntpdate ntp.sjtu.edu.cn
 
 10. config puppet.conf in both master and slave.
-    master pc ¡ý
+    master pc â†“
     [master]
 	certname = master
 
-    slave pc ¡ý
+    slave pc â†“
     [agent]	
 	certname = slave
 	server = master
@@ -48,14 +48,14 @@
     you'll see slave's cert string.
 	
 12. how to clean cert for both master and slave when error occurred.
-     master pc ¡ý
+     master pc â†“
      puppet cert  --clean --all
      systemctl restart puppetmaster.service
-     slave pc ¡ý
+     slave pc â†“
      rm -rf /var/lib/puppet
      puppet agent --test
 
 13. you must sign slave's cert after step 9 or 10.
      puppet cert --sign --all or puppet cert --sign slave (slave is the slave pc's hostname)
 
-14. after step 11, you can create pp file to execute puppet agent --test on slave pc.
+14. after step 13, you can create pp file to execute puppet agent --test on slave pc.
