@@ -1,0 +1,55 @@
+1. enable network (before that, set network to bridge)
+  a) cd /etc/sysconfig/network-scripts/
+  b) vi ifcfg-ens33
+  c) ONBOOT=yes
+
+2. change yum source to install puppet server.
+  a) rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+3. set hostname
+ a) sudo hostnamectl set-hostname <newhostname>
+
+4. if no ipv4 address, then restart the physical machine.
+
+5. set hostname resolution into /etc/hosts like this.
+   192.168.43.4    master.localdomain master
+    192.168.43.74    slave.localdomain slave
+
+6. install repos of puppet labs for centos 7.
+    wget https://yum.puppetlabs.com/el/7/products/x86_64/puppetlabs-release-7-10.noarch.rpm
+    sudo yum install puppet  (client)
+   sudo yum install puppet-server
+
+7. open firewall for port 8140 on master pc.
+   iptables -I INPUT 5 -p tcp -m tcp --dport 8140 -m state --state NEW -j ACCEPT
+   or iptables -F
+
+8. config puppet.conf in both master and slave.
+    master pc ¡ý
+    [master]
+	certname = master
+
+    slave pc ¡ý
+    [agent]	
+	certname = slave
+	server = master
+	report = true
+
+9. execute test command in slave pc by root user.
+	sudo puppet agent --test
+    then execute cert list command in master pc by root user.
+	sudo puppet cert list
+    you'll see slave's cert string.
+	
+10. how to clean cert for both master and slave when error occurred.
+     master pc ¡ý
+     puppet cert  --clean --all
+     systemctl restart puppetmaster.service
+     slave pc ¡ý
+     rm -rf /var/lib/puppet
+     puppet agent --test
+
+11. you must sign slave's cert after step 9 or 10.
+     puppet cert --sign --all or puppet cert --sign slave (slave is the slave pc's hostname)
+
+12. after step 11, you can create pp file to execute puppet agent --test on slave pc.
