@@ -24,7 +24,13 @@
    iptables -I INPUT 5 -p tcp -m tcp --dport 8140 -m state --state NEW -j ACCEPT
    or iptables -F
 
-8. config puppet.conf in both master and slave.
+8. install ntp on both master and slave.
+   yum install ntp.
+
+9. before execute puppet on master and slave, you'd better sync time.
+    ntpdate ntp.sjtu.edu.cn
+
+10. config puppet.conf in both master and slave.
     master pc ¡ý
     [master]
 	certname = master
@@ -35,13 +41,13 @@
 	server = master
 	report = true
 
-9. execute test command in slave pc by root user.
+11. execute test command in slave pc by root user.
 	sudo puppet agent --test
     then execute cert list command in master pc by root user.
 	sudo puppet cert list
     you'll see slave's cert string.
 	
-10. how to clean cert for both master and slave when error occurred.
+12. how to clean cert for both master and slave when error occurred.
      master pc ¡ý
      puppet cert  --clean --all
      systemctl restart puppetmaster.service
@@ -49,7 +55,7 @@
      rm -rf /var/lib/puppet
      puppet agent --test
 
-11. you must sign slave's cert after step 9 or 10.
+13. you must sign slave's cert after step 9 or 10.
      puppet cert --sign --all or puppet cert --sign slave (slave is the slave pc's hostname)
 
-12. after step 11, you can create pp file to execute puppet agent --test on slave pc.
+14. after step 11, you can create pp file to execute puppet agent --test on slave pc.
