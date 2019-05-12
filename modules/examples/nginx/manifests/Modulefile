@@ -1,0 +1,14 @@
+name 'nginx'
+version '0.0.1'
+author 'fanli.bu'
+license 'Apache License Version 2.0'
+summary 'Puppet NGINX management module'
+description 'This module can be used for basic NGINX Management'
+project_page 'http://xxxx/nginx'
+$ sudo vim README
+# NGINX Module
+fanli.bu<bflbfl1980@163.com>
+This module manages NGINX from within Puppet.
+USAGE:
+# Standard Classes
+include nginx

@@ -1,0 +1,24 @@
+user daemon daemon;
+worker_processes<%= processorcount %>;
+pid /var/run/nginx.pid;
+error_log /var/log/nginx/error.log;
+worker_rlimit_nofile 51200;
+events
+{
+use epoll;
+worker_connections 51200;
+}
+http
+{
+include /etc/nginx/mime.types;
+default_type application/octet-stream;
+server_names_hash_bucket_size 128;
+server {
+listen 80;
+server_name _;
+location /nginx_status {
+stub_status on;
+access_log off;
+}
+}
+}
